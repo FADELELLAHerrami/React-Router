@@ -19,7 +19,7 @@ export default function HostVans() {
             <div className="host-vans-list">
                 <section>
                     {vans.map((van) => (
-                        <Link to={`/host/me/${van.id}`} key={van.id} className="host-van-link-wrapper">
+                        <Link to={`${van.id}`} key={van.id} className="host-van-link-wrapper">
                             <div className="host-van-single">
                                 <img src={van.imageUrl}></img>
                                 <div className="host-van-info">
