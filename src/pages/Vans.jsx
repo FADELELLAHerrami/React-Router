@@ -1,24 +1,44 @@
-import React from "react";
-import { Link  } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLoaderData, useSearchParams  } from "react-router-dom";
 import './server.js';
+import { fetchVans } from "./FetchVans.js";
 
-
+export function loader(){
+    return fetchVans();
+}
 
 export default function Vans() {
-    const [vans, setVans] = React.useState([])
-    const memoizedVans = React.useMemo(async () => {
-        const response = await fetch("/api/vans");
-        const json = await response.json();
-        return json.vans;
-    }, []); 
+    // const [vans, setVans] = React.useState([]);
+    
 
-    React.useEffect(()=>{
-        memoizedVans.then((vans)=>setVans(vans));
-    },[memoizedVans]);
+    // React.useEffect(() => {
+    //     async function loadVans() {
+    //         setLoading(true);
+    //         try{
+    //             const data = await fetchVans();
+    //             setVans(data);
+    //         }catch(error){
+    //             setError(error)
+    //         }finally{
+    //             setLoading(false);
+    //         }
+    //     }
+        
+    //     loadVans()
+    // }, [])
+    // useLoaderData
+    const vans = useLoaderData();
+    //serchParams
+    const[searchParams,setSearchParams] = useSearchParams();
+    const typeFilter = searchParams.get('type');
+    //filter vans basedd on type
+    const filterVans =  typeFilter
+    ? vans.filter(van=>van.type.toLowerCase() === typeFilter)
+    :vans;
 
-    const vanElements = vans.map(van => (
+    const vanElements = filterVans.map(van => (
         <div key={van.id} className="van-tile">
-            <Link to={`/Vins/${van.id}`}>
+            <Link to={`${van.id}`} state={{type: typeFilter}}>
                 <img src={van.imageUrl} />
                 <div className="van-info">
                     <h3>{van.name}</h3>
@@ -28,10 +48,15 @@ export default function Vans() {
             </Link>
         </div>
     ))
-
     return (
         <div className="van-list-container">
             <h1>Explore our van options</h1>
+            <nav className="host-van-single-part3">
+                <Link to=".">All</Link>
+                <Link to="?type=simple">simple</Link>
+                <Link to="?type=rugged">rugged</Link>
+                <Link to="?type=luxury">luxury</Link>
+            </nav>
             <div className="van-list">
                 {vanElements}
             </div>

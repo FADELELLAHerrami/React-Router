@@ -15,7 +15,7 @@ export default function Photo(){
     },[])
     return(
         <>
-            {description ? <p>{description}$/day</p> : <p>loading ...</p>}
+            {description ? <p>{description}$/day</p>: <p>loading ...</p>}
         </>
     )
 }

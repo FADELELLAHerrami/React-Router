@@ -15,7 +15,7 @@ export default function Photo(){
     },[])
     return(
         <>
-            {photo?<img className="photo" src={photo} />:<p>loading</p> }
+            {photo?<img className="photo" src={photo} />:<p>loading ...</p> }
         </>
     )
 }

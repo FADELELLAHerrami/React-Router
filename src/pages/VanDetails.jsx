@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './server.js';
-import { useParams } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
 
 
 
@@ -16,6 +16,9 @@ export default function VanDetails(){
     return(
         <>
              <div className="van-detail-container">
+             <Link to=".." className="back-button" state={{search: params.toString()}}>
+                &larr; <span>Back to all vans</span>
+            </Link>
                 {van ? (
                     <div className="van-detail">
                         <img src={van.imageUrl} />
