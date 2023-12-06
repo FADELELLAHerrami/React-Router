@@ -1,18 +1,17 @@
-import { useEffect, useState } from 'react';
 import './server.js';
-import { useParams, Link, Outlet } from 'react-router-dom';
+import { useParams, Link, Outlet, useLoaderData } from 'react-router-dom';
+import { fetchHostVans } from './fetchHostVan.js';
+import { AuthRequired } from '../components/AuthRequired.js';
 
-
+export async function loader({ params }){
+    await AuthRequired();
+    return fetchHostVans(params.id);
+}
 
 export default function HostVanDetails(){
-    const [van,setVan] = useState({});
     const params = useParams();
     console.log(params);
-    useEffect(()=>{
-        fetch(`/api/vans/${params.id}`)
-        .then(res=> res.json())
-        .then(json => setVan(json.vans))
-    },[params.id])
+    const van = useLoaderData();
     return(
         <>
             <Link to="../me" className="back-button">

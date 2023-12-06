@@ -1,11 +1,19 @@
-import React, { useState } from "react";
 import { Link, useLoaderData, useSearchParams  } from "react-router-dom";
 import './server.js';
 import { fetchVans } from "./FetchVans.js";
+import { AuthRequired } from "../components/AuthRequired.js";
 
-export function loader(){
+
+
+
+
+export async function loader(){
+    await AuthRequired();
     return fetchVans();
 }
+
+
+
 
 export default function Vans() {
     // const [vans, setVans] = React.useState([]);
