@@ -1,6 +1,6 @@
-import React from "react";
-import { useLoaderData } from "react-router-dom";
-
+import React, { useState } from "react";
+import { useLoaderData , useNavigate , Form } from "react-router-dom";
+import { loginUser } from "./fetchUser";
 
 
 
@@ -18,11 +18,23 @@ export function loader({ request }) {
 }
 
 export default function Login() {
+    // idle
+    const [status,setStatus] = useState('idle');
+    // error
+    const [error,setError] = useState(null);
+    // 
+    const navigate = useNavigate();
+    // 
     const [loginFormData, setLoginFormData] = React.useState({ email: "", password: "" })
 
     function handleSubmit(e) {
-        e.preventDefault()
-        console.log(loginFormData)
+        e.preventDefault();
+        setStatus('submitting');
+        setError(null);
+        loginUser(loginFormData)
+            .then(data => navigate('/host'),{replace: true})
+            .catch(err => setError(err))
+            .finally(() => setStatus('idle'));
     }
 
     function handleChange(e) {
@@ -39,7 +51,7 @@ export default function Login() {
     return (
         <div className="login-container">
             <h1>Sign in to your account</h1>
-            <form onSubmit={handleSubmit} className="login-form">
+            <Form onSubmit={handleSubmit} className="login-Form">
                 <input
                     name="email"
                     onChange={handleChange}
@@ -54,9 +66,10 @@ export default function Login() {
                     placeholder="Password"
                     value={loginFormData.password}
                 />
-                <button>Log in</button>
+                <button disabled={status === 'submitting'}>{status === 'submitting' ? "Loggining ... " : "Log in"}</button>
                 {message && <p className="messageMustAppear">{ message }</p>}
-            </form>
+                {error && <p className="messageMustAppear">{ error.message }</p>}
+            </Form>
         </div>
     )
 
